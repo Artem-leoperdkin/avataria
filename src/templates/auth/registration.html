@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Зарегистрироваться</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='script.js') }}" />
+  </head>
+  <body>
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="columns is-centered">
+            <div class="column is-half-tablet is-one-quarter-desktop">
+              <div class="box">
+                <h1 class="title is-4">Регистрация</h1>
+                {% with messages=get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <div class="notification is-danger">
+                      <ul>
+                        {% for category, message in messages %}
+                          <li>{{ message }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+                <form action="/registration" method="POST">
+                  <div class="field">
+                    <label class="label">Электронная почта</label>
+                    <div class="control">
+                      <input class="input" type="email" name="email" required placeholder="Введите ваш email" />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Пароль</label>
+                    <div class="control">
+                      <input class="input" type="password" name="password" required placeholder="Введите ваш пароль" />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Подтверждение пароля</label>
+                    <div class="control">
+                      <input class="input" type="password" name="confirmPassword" required placeholder="Подтвердите ваш пароль" />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <div class="control">
+                      <button class="button is-primary is-fullwidth">Зарегистрироваться</button>
+                    </div>
+                  </div>
+
+                  <div class="field has-text-centered">
+                    <p>
+                      Уже есть аккаунт? <a href="/login">Войти</a>
+                    </p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

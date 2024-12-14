@@ -1,0 +1,137 @@
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+  <style>
+    .character-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .character {
+      position: relative;
+      width: 200px;
+      height: 400px;
+      margin-bottom: 20px;
+    }
+    
+    .character img {
+      position: absolute;
+      transition: 0.3s ease-in-out;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .controls button,
+    #saveButton {
+      background-color: #3273dc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .controls button:hover,
+    #saveButton:hover {
+      background-color: #276cda;
+    }
+    
+    #saveButton {
+      margin-top: 20px;
+    }
+    
+    .title {
+      margin-bottom: 30px;
+    }
+  </style>
+  <section class="section">
+    <div class="container">
+      <h1 class="title has-text-centered">Отредактируйте Своего Виртуального Персонажа</h1>
+
+      <div class="character-container">
+        <div class="character" id="character">
+          
+          <img src="{{ character.hat }}" id="hat" class="item" style="top: 20px; left: 50px; width: 80px;" />
+          <img src="{{ character.shirt }}" id="shirt" class="item" style="top: 100px; left: 50px; width: 100px;" />
+          <img src="{{ character.pants }}" id="pants" class="item" style="top: 200px; left: 50px; width: 100px;" />
+          <img src="{{ character.shoes }}" id="shoes" class="item" style="top: 300px; left: 60px; width: 100px;" />
+        </div>
+
+        <div class="controls">
+          <button class="button is-primary" onclick="cycleItem('hat', 'hats')">Сменить головной убор</button>
+          <button class="button is-primary" onclick="cycleItem('shirt', 'shirts')">Сменить верх</button>
+          <button class="button is-primary" onclick="cycleItem('pants', 'pants')">Сменить низ</button>
+          <button class="button is-primary" onclick="cycleItem('shoes', 'shoes')">Сменить обувь</button>
+        </div>
+
+        <button id="saveButton" class="button is-link" onclick="saveCharacter()">Сохранить</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const items = {
+      hat: ["{{ url_for('static', filename='character/options/hats/hat1.png') }}", "{{ url_for('static', filename='character/options/hats/hat2.png') }}", "{{ url_for('static', filename='character/options/hats/hat3.png') }}"],
+      shirt: ["{{ url_for('static', filename='character/options/shirts/shirt1.png') }}", "{{ url_for('static', filename='character/options/shirts/shirt2.png') }}", "{{ url_for('static', filename='character/options/shirts/shirt3.png') }}"],
+      pants: ["{{ url_for('static', filename='character/options/pants/pants1.png') }}", "{{ url_for('static', filename='character/options/pants/pants2.png') }}", "{{ url_for('static', filename='character/options/pants/pants3.png') }}"],
+      shoes: ["{{ url_for('static', filename='character/options/shoes/shoes1.png') }}", "{{ url_for('static', filename='character/options/shoes/shoes2.png') }}", "{{ url_for('static', filename='character/options/shoes/shoes3.png') }}"]
+    }
+
+    const currentIndexes = {
+      hat: 0,
+      shirt: 0,
+      pants: 0,
+      shoes: 0
+    }
+
+    {% if character %}
+      currentIndexes.hat = items.hat.indexOf("{{ character.hat }}");
+      currentIndexes.shirt = items.shirt.indexOf("{{ character.shirt }}");
+      currentIndexes.pants = items.pants.indexOf("{{ character.pants }}");
+      currentIndexes.shoes = items.shoes.indexOf("{{ character.shoes }}");
+    {% endif %}
+
+    function cycleItem(itemId, folder) {
+      const item = document.getElementById(itemId)
+      const options = items[itemId]
+      currentIndexes[itemId] = (currentIndexes[itemId] + 1) % options.length
+      item.src = options[currentIndexes[itemId]]
+      item.style.display = 'block'
+    }
+
+    function saveCharacter() {
+      const characterData = {
+        hat: items.hat[currentIndexes.hat],
+        shirt: items.shirt[currentIndexes.shirt],
+        pants: items.pants[currentIndexes.pants],
+        shoes: items.shoes[currentIndexes.shoes]
+      }
+        characterId = "{{ character.id }}"
+      fetch(`/character/${characterId}/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(characterData)
+      })
+        .then((data) => {
+          if (data.status == 200) {
+            alert('Character updated successfully!')
+          } else {
+            alert('Error updating character.')
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating character:', error)
+          alert('Error updating character.')
+        })
+    }
+  </script>
+{% endblock %}

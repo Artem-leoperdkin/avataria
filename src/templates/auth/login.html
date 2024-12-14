@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Войти</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+
+  <body>
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="columns is-centered">
+            <div class="column is-half-tablet is-one-quarter-desktop">
+              <div class="box">
+                {% with messages=get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <ul>
+                      {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+                <h1 class="title is-4">Вход в систему</h1>
+                <form action="/login" method="POST">
+                  <div class="field">
+                    <label class="label">Электронная почта</label>
+                    <div class="control">
+                      <input class="input" type="email" name="email" required placeholder="Введите ваш email" />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Пароль</label>
+                    <div class="control">
+                      <input class="input" type="password" name="password" required placeholder="Введите ваш пароль" />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <div class="control">
+                      <button class="button is-primary is-fullwidth">Войти</button>
+                    </div>
+                  </div>
+
+                  <div class="field has-text-centered">
+                    <p>
+                      Нет аккаунта? <a href="/registration">Зарегистрироваться</a>
+                    </p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
