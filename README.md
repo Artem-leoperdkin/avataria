@@ -41,8 +41,7 @@
 
 2. Создайте и активируйте виртуальное окружение (опционально):
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Для Windows: venv\Scripts\activate
+   python -m venv venv
    ```
 
 3. Установите зависимости:
@@ -52,7 +51,7 @@
 
 4. Запустите приложение:
    ```bash
-   python3 run ./src/run.py
+   python ./src/run.py
    ```
 
 5. Откройте приложение в браузере по адресу:
